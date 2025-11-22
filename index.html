@@ -1,130 +1,164 @@
+<!-- NOUVEAU index.html avec interface pro -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌸 Romance Royale - Jeu de Romance Interactif</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <title>🌸 Romance Academy - Jeu de Romance</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff9eb5, #c8a2c8);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .game-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: url('fond-academie.jpg') center/cover;
+            position: relative;
+        }
+
+        /* BARRE DE DIALOGUE STYLE AMOUR SUCRÉ */
+        .dialogue-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-top: 3px solid #ff9eb5;
+        }
+
+        .speaker-name {
+            color: #ff9eb5;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .dialogue-text {
+            font-size: 1.1em;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            min-height: 60px;
+        }
+
+        .choices {
+            display: grid;
+            gap: 10px;
+        }
+
+        .choice-btn {
+            background: rgba(255, 158, 181, 0.3);
+            border: 2px solid #ff9eb5;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .choice-btn:hover {
+            background: #ff9eb5;
+            transform: translateX(10px);
+        }
+
+        /* PERSONNAGES À L'ÉCRAN */
+        .character {
+            position: absolute;
+            bottom: 200px;
+            transition: all 0.5s ease;
+        }
+
+        .character-left {
+            left: 10%;
+        }
+
+        .character-right {
+            right: 10%;
+        }
+
+        .character-img {
+            width: 300px;
+            height: 400px;
+            object-fit: contain;
+        }
+
+        /* MENU PRINCIPAL */
+        .main-menu {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            border: 3px solid #ff9eb5;
+        }
+
+        .menu-title {
+            color: #ff9eb5;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+        }
+
+        .menu-btn {
+            background: #ff9eb5;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+
+        .menu-btn:hover {
+            background: #e75480;
+            transform: scale(1.05);
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header Glamour -->
-        <header class="header">
-            <div class="logo">🌸 Romance Royale</div>
-            <div class="player-info">
-                <div class="stat">
-                    <span class="heart">💖</span>
-                    <span id="lovePoints">50</span>
+    <div class="game-container">
+        <!-- ÉCRAN MENU PRINCIPAL -->
+        <div id="mainMenu" class="main-menu">
+            <h1 class="menu-title">🌸 ROMANCE ACADEMY 🌸</h1>
+            <button class="menu-btn" onclick="startGame()">Nouvelle Partie</button>
+            <button class="menu-btn" onclick="loadGame()">Continuer</button>
+            <button class="menu-btn" onclick="showSettings()">Paramètres</button>
+        </div>
+
+        <!-- ÉCRAN DE JEU -->
+        <div id="gameScreen" class="hidden">
+            <!-- PERSONNAGES -->
+            <div id="characterLeft" class="character character-left"></div>
+            <div id="characterRight" class="character character-right"></div>
+
+            <!-- DIALOGUE -->
+            <div class="dialogue-container">
+                <div class="speaker-name" id="speakerName">Narrateur</div>
+                <div class="dialogue-text" id="dialogueText">
+                    Bienvenue à l'Académie Romance !
                 </div>
-                <div class="stat">
-                    <span class="diamond">💎</span>
-                    <span id="diamonds">150</span>
-                </div>
-                <div class="player-avatar" id="playerAvatar">
-                    👑
+                <div class="choices" id="choicesContainer">
+                    <button class="choice-btn" onclick="makeChoice(0)">Commencer l'aventure</button>
                 </div>
             </div>
-        </header>
-
-        <!-- Section Jeu Principale -->
-        <main class="game-main">
-            <!-- Scene Container -->
-            <div class="scene-container">
-                <div class="character-display">
-                    <div class="character" id="character1">
-                        <div class="character-avatar">👩</div>
-                        <div class="character-name">Sophia</div>
-                    </div>
-                    <div class="character" id="character2">
-                        <div class="character-avatar">🐱</div>
-                        <div class="character-name">Mimi</div>
-                    </div>
-                </div>
-
-                <div class="dialogue-container">
-                    <div class="dialogue-box" id="dialogueBox">
-                        <div class="speaker" id="speaker">Narrateur</div>
-                        <div class="message" id="message">
-                            Bienvenue dans Romance Royale ! Ton aventure romantique commence maintenant...
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Choices -->
-                <div class="choices-container" id="choicesContainer">
-                    <div class="choice" onclick="makeChoice(0)">Commencer l'aventure</div>
-                </div>
-            </div>
-
-            <!-- Sidebar - Animal & Customisation -->
-            <aside class="sidebar">
-                <!-- Animal de Compagnie -->
-                <div class="pet-section">
-                    <h3>🐾 Mon Animal</h3>
-                    <div class="pet-display">
-                        <div class="pet-avatar">🐱</div>
-                        <div class="pet-stats">
-                            <div class="pet-stat">
-                                <div class="stat-bar">
-                                    <div class="stat-fill hunger-fill" style="width: 80%"></div>
-                                </div>
-                                <span>Faim</span>
-                            </div>
-                            <div class="pet-stat">
-                                <div class="stat-bar">
-                                    <div class="stat-fill happiness-fill" style="width: 60%"></div>
-                                </div>
-                                <span>Bonheur</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="pet-actions">
-                        <button class="action-btn" onclick="feedPet()">🍖 Nourrir</button>
-                        <button class="action-btn" onclick="playWithPet()">🎾 Jouer</button>
-                    </div>
-                </div>
-
-                <!-- Garde-robe -->
-                <div class="wardrobe-section">
-                    <h3>👗 Ma Garde-Robe</h3>
-                    <div class="outfits">
-                        <div class="outfit active" onclick="changeOutfit(0)">Robe Classique</div>
-                        <div class="outfit" onclick="changeOutfit(1)">Tenue Élégante</div>
-                        <div class="outfit" onclick="changeOutfit(2)">Style Moderne</div>
-                    </div>
-                </div>
-
-                <!-- Chambre à décorer -->
-                <div class="room-section">
-                    <h3>🏠 Ma Chambre</h3>
-                    <div class="decorations">
-                        <div class="decoration-item">🛏️ Lit Basique</div>
-                        <div class="decoration-item locked">🎨 Tableau Rare</div>
-                        <div class="decoration-item locked">🌹 Vase Luxe</div>
-                    </div>
-                </div>
-            </aside>
-        </main>
-
-        <!-- Progress Bar -->
-        <footer class="footer">
-            <div class="progress-section">
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill" style="width: 10%"></div>
-                </div>
-                <div class="chapter-info">Chapitre 1: La Rencontre</div>
-            </div>
-        </footer>
-    </div>
-
-    <!-- Menu Flottant -->
-    <div class="floating-menu">
-        <button class="menu-btn" onclick="toggleMenu()">🌸</button>
-        <div class="menu-content" id="menuContent">
-            <div class="menu-item" onclick="saveGame()">💾 Sauvegarder</div>
-            <div class="menu-item" onclick="loadGame()">📂 Charger</div>
-            <div class="menu-item" onclick="showSettings()">⚙️ Paramètres</div>
         </div>
     </div>
 
