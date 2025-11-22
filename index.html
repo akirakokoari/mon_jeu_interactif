@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌸 Romance Royale - Jeu de Romance Interactif</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Glamour -->
+        <header class="header">
+            <div class="logo">🌸 Romance Royale</div>
+            <div class="player-info">
+                <div class="stat">
+                    <span class="heart">💖</span>
+                    <span id="lovePoints">50</span>
+                </div>
+                <div class="stat">
+                    <span class="diamond">💎</span>
+                    <span id="diamonds">150</span>
+                </div>
+                <div class="player-avatar" id="playerAvatar">
+                    👑
+                </div>
+            </div>
+        </header>
+
+        <!-- Section Jeu Principale -->
+        <main class="game-main">
+            <!-- Scene Container -->
+            <div class="scene-container">
+                <div class="character-display">
+                    <div class="character" id="character1">
+                        <div class="character-avatar">👩</div>
+                        <div class="character-name">Sophia</div>
+                    </div>
+                    <div class="character" id="character2">
+                        <div class="character-avatar">🐱</div>
+                        <div class="character-name">Mimi</div>
+                    </div>
+                </div>
+
+                <div class="dialogue-container">
+                    <div class="dialogue-box" id="dialogueBox">
+                        <div class="speaker" id="speaker">Narrateur</div>
+                        <div class="message" id="message">
+                            Bienvenue dans Romance Royale ! Ton aventure romantique commence maintenant...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Choices -->
+                <div class="choices-container" id="choicesContainer">
+                    <div class="choice" onclick="makeChoice(0)">Commencer l'aventure</div>
+                </div>
+            </div>
+
+            <!-- Sidebar - Animal & Customisation -->
+            <aside class="sidebar">
+                <!-- Animal de Compagnie -->
+                <div class="pet-section">
+                    <h3>🐾 Mon Animal</h3>
+                    <div class="pet-display">
+                        <div class="pet-avatar">🐱</div>
+                        <div class="pet-stats">
+                            <div class="pet-stat">
+                                <div class="stat-bar">
+                                    <div class="stat-fill hunger-fill" style="width: 80%"></div>
+                                </div>
+                                <span>Faim</span>
+                            </div>
+                            <div class="pet-stat">
+                                <div class="stat-bar">
+                                    <div class="stat-fill happiness-fill" style="width: 60%"></div>
+                                </div>
+                                <span>Bonheur</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pet-actions">
+                        <button class="action-btn" onclick="feedPet()">🍖 Nourrir</button>
+                        <button class="action-btn" onclick="playWithPet()">🎾 Jouer</button>
+                    </div>
+                </div>
+
+                <!-- Garde-robe -->
+                <div class="wardrobe-section">
+                    <h3>👗 Ma Garde-Robe</h3>
+                    <div class="outfits">
+                        <div class="outfit active" onclick="changeOutfit(0)">Robe Classique</div>
+                        <div class="outfit" onclick="changeOutfit(1)">Tenue Élégante</div>
+                        <div class="outfit" onclick="changeOutfit(2)">Style Moderne</div>
+                    </div>
+                </div>
+
+                <!-- Chambre à décorer -->
+                <div class="room-section">
+                    <h3>🏠 Ma Chambre</h3>
+                    <div class="decorations">
+                        <div class="decoration-item">🛏️ Lit Basique</div>
+                        <div class="decoration-item locked">🎨 Tableau Rare</div>
+                        <div class="decoration-item locked">🌹 Vase Luxe</div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Progress Bar -->
+        <footer class="footer">
+            <div class="progress-section">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 10%"></div>
+                </div>
+                <div class="chapter-info">Chapitre 1: La Rencontre</div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Menu Flottant -->
+    <div class="floating-menu">
+        <button class="menu-btn" onclick="toggleMenu()">🌸</button>
+        <div class="menu-content" id="menuContent">
+            <div class="menu-item" onclick="saveGame()">💾 Sauvegarder</div>
+            <div class="menu-item" onclick="loadGame()">📂 Charger</div>
+            <div class="menu-item" onclick="showSettings()">⚙️ Paramètres</div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
