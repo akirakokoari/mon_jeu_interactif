@@ -1,136 +1,155 @@
-// 🎭 SYSTÈME D'HISTOIRE SIMPLE
-class HistoireManager {
+// DANS game.js - NOUVEAU SYSTÈME DE SAUVEGARDE
+class AdvancedGame {
     constructor() {
-        this.sceneActuelle = 0;
-        this.saisonActuelle = 1;
-        this.relations = {};
-        this.init();
+        this.gameData = {
+            scene: 0,
+            relations: {},
+            inventory: [],
+            playerName: "Joueur",
+            version: "1.0"
+        };
+        this.story = this.createAdvancedStory();
     }
 
-    init() {
-        this.scenes = this.creerScenes();
-        this.afficherScene(0);
+    // SYSTÈME DE SAUVEGARDE AVEC CODE
+    saveGame() {
+        const saveCode = btoa(JSON.stringify(this.gameData));
+        localStorage.setItem('romanceSave', saveCode);
+        
+        // Affiche le code pour partager
+        alert(`💾 SAUVEGARDÉ !\n\nCode de sauvegarde :\n${saveCode}\n\nCopie ce code pour reprendre plus tard !`);
+        return saveCode;
     }
 
-    creerScenes() {
+    loadGame(saveCode = null) {
+        try {
+            const code = saveCode || localStorage.getItem('romanceSave');
+            if (code) {
+                const savedData = JSON.parse(atob(code));
+                this.gameData = { ...this.gameData, ...savedData };
+                this.showScene(this.gameData.scene);
+                alert('✅ Partie chargée !');
+            }
+        } catch (e) {
+            alert('❌ Code de sauvegarde invalide');
+        }
+    }
+
+    // HISTOIRE AVANCÉE AVEC VRAIS DIALOGUES
+    createAdvancedStory() {
         return [
-            // SCÈNE 0 - INTRODUCTION
+            // CHAPITRE 1 - LA RENCONTRE
             {
-                personnage: "Narrateur",
-                message: "Tu arrives devant les portes de l'Académie Royale des Arts. Le bâtiment est magnifique, mais tu sens une pointe de nervosité...",
-                choix: [
-                    { texte: "Prendre une grande inspiration et entrer", next: 1, effets: { courage: 5 } },
-                    { texte: "Observer les autres étudiants d'abord", next: 2, effets: { observation: 5 } },
-                    { texte: "Chercher quelqu'un pour demander son chemin", next: 3, effets: { sociabilite: 5 } }
+                background: "fond-academie.jpg",
+                characters: {
+                    left: { image: "perso_alex.png", emotion: "neutre" },
+                    right: null
+                },
+                speaker: "Narrateur",
+                text: "Tu arrives devant la prestigieuse Académie des Arts. Le cœur battant, tu pousses les lourdes portes...",
+                choices: [
+                    { text: "Prendre une profonde inspiration", next: 1, effects: {} },
+                    { text: "Regarder autour avec curiosité", next: 2, effects: {} }
                 ]
             },
-
-            // SCÈNE 1 - INTÉRIEUR ACADÉMIE
             {
-                personnage: "Narrateur", 
-                message: "L'intérieur est encore plus impressionnant. Des tableaux magnifiques ornent les murs. Un étudiant semble t'avoir remarqué...",
-                choix: [
-                    { texte: "Sourire timidement", next: 4, effets: { alex: 10 } },
-                    { texte: "Détourner le regard", next: 5, effets: { alex: 0 } },
-                    { texte: "Aller vers lui", next: 6, effets: { alex: 15, courage: 5 } }
+                background: "fond-couloir.jpg", 
+                characters: {
+                    left: { image: "perso_alex.png", emotion: "sourire" },
+                    right: null
+                },
+                speaker: "Alex",
+                text: "Oh, bonjour ! Je ne t'ai jamais vu ici. Tu es nouveau ? Je m'appelle Alex.",
+                choices: [
+                    { text: \"Salut ! Je m'appelle... [ton nom]\", next: 3, effects: { alex: 10 } },
+                    { text: "Oui, je viens d'arriver. C'est immense !", next: 4, effects: { alex: 5 } }
                 ]
             },
-
-            // SCÈNE 4 - RENCONTRE ALEX
             {
-                personnage: "Alex",
-                message: "Salut ! Je ne t'ai jamais vu ici. Tu es nouveau ? Je m'appelle Alex, je suis en section peinture.",
-                choix: [
-                    { texte: \"Ravi de te rencontrer ! Je m'appelle [Ton Nom]\", next: 7, effets: { alex: 20 } },
-                    { texte: "Oui, je viens d'arriver. C'est immense ici !", next: 8, effets: { alex: 15 } },
-                    { texte: "Je cherche la salle de dessin...", next: 9, effets: { alex: 10 } }
-                ]
-            },
-
-            // SCÈNE 7 - PREMIÈRE CONVERSATION
-            {
-                personnage: "Alex",
-                message: \"[Ton Nom], joli prénom ! Moi je passe mon temps dans l'atelier de peinture. Tu aimes l'art ?\",
-                choix: [
-                    { texte: \"J'adore ! Surtout la peinture à l'huile\", next: 10, effets: { alex: 25, pointsCommuns: 10 } },
-                    { texte: \"Je débute, mais je suis passionné\", next: 11, effets: { alex: 20, honnetete: 5 } },
-                    { texte: \"Je préfère la musique, en fait\", next: 12, effets: { alex: 10 } }
+                background: "fond-couloir.jpg",
+                characters: {
+                    left: { image: "perso_alex.png", emotion: "curieux" },
+                    right: null
+                },
+                speaker: "Alex",
+                text: \"[ton nom], joli prénom ! Moi je suis en section peinture. Et toi, tu es ici pour quoi ?\",
+                choices: [
+                    { text: "La peinture aussi !", next: 5, effects: { alex: 15 } },
+                    { text: "La musique, plutôt", next: 6, effects: { alex: 8 } },
+                    { text: "Je ne sais pas encore...", next: 7, effects: { alex: 3 } }
                 ]
             }
         ];
     }
 
-    afficherScene(id) {
-        const scene = this.scenes[id];
-        if (!scene) {
-            this.finChapitre();
-            return;
-        }
+    showScene(sceneId) {
+        const scene = this.story[sceneId];
+        if (!scene) return;
 
         // Met à jour l'interface
-        document.getElementById('speaker').textContent = scene.personnage;
-        document.getElementById('message').textContent = scene.message;
+        document.getElementById('speakerName').textContent = scene.speaker;
+        document.getElementById('dialogueText').textContent = scene.text;
+
+        // Change le fond
+        document.querySelector('.game-container').style.backgroundImage = `url('${scene.background}')`;
+
+        // Affiche les personnages
+        this.displayCharacters(scene.characters);
 
         // Affiche les choix
+        this.displayChoices(scene.choices);
+
+        this.gameData.scene = sceneId;
+    }
+
+    displayCharacters(chars) {
+        // Implémente l'affichage des personnages
+    }
+
+    displayChoices(choices) {
         const container = document.getElementById('choicesContainer');
         container.innerHTML = '';
 
-        scene.choix.forEach((choix, index) => {
-            const btn = document.createElement('div');
-            btn.className = 'choice';
-            btn.textContent = choix.texte;
-            btn.onclick = () => this.faireChoix(choix);
+        choices.forEach((choice, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            btn.textContent = choice.text;
+            btn.onclick = () => this.makeChoice(choice);
             container.appendChild(btn);
         });
-
-        this.sceneActuelle = id;
     }
 
-    faireChoix(choix) {
+    makeChoice(choice) {
         // Applique les effets
-        if (choix.effets) {
-            Object.entries(choix.effets).forEach(([key, value]) => {
-                if (!this.relations[key]) this.relations[key] = 0;
-                this.relations[key] += value;
+        if (choice.effects) {
+            Object.entries(choice.effects).forEach(([key, value]) => {
+                if (!this.gameData.relations[key]) this.gameData.relations[key] = 0;
+                this.gameData.relations[key] += value;
             });
         }
 
-        // Animation simple
-        this.showFeedback(choix.effets);
-
-        // Scene suivante
-        setTimeout(() => {
-            this.afficherScene(choix.next);
-        }, 500);
+        this.showScene(choice.next);
     }
+}
 
-    showFeedback(effets) {
-        console.log("Effets du choix:", effets);
-        // Tu peux ajouter des animations ici
-    }
+// FONCTIONS GLOBALES
+let game;
 
-    finChapitre() {
-        alert("🎉 Fin du chapitre !\n\n" +
-              `Progression relations:\n` +
-              `Alex: ${this.relations.alex || 0}/100\n` +
-              `Courage: ${this.relations.courage || 0}/50`);
+function startGame() {
+    document.getElementById('mainMenu').classList.add('hidden');
+    document.getElementById('gameScreen').classList.remove('hidden');
+    
+    game = new AdvancedGame();
+    game.showScene(0);
+}
+
+function loadGame() {
+    const saveCode = prompt("Colle ton code de sauvegarde :");
+    if (saveCode) {
+        document.getElementById('mainMenu').classList.add('hidden');
+        document.getElementById('gameScreen').classList.remove('hidden');
         
-        // Recommencer ou sauvegarder
-        this.sceneActuelle = 0;
-        this.afficherScene(0);
+        game = new AdvancedGame();
+        game.loadGame(saveCode);
     }
-}
-
-// 🚀 DÉMARRAGE DU JEU
-let jeu;
-
-function demarrerJeu() {
-    jeu = new HistoireManager();
-}
-
-// Démarre quand la page est prête
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', demarrerJeu);
-} else {
-    demarrerJeu();
 }
