@@ -1,291 +1,136 @@
-// 🎮 SYSTÈME DE JEU COMPLET - Romance Royale
-
-class RomanceGame {
+// 🎭 SYSTÈME D'HISTOIRE SIMPLE
+class HistoireManager {
     constructor() {
-        this.gameState = {
-            currentScene: 0,
-            lovePoints: 50,
-            diamonds: 150,
-            playerOutfit: 0,
-            pet: {
-                hunger: 80,
-                happiness: 60,
-                name: "Mimi"
-            },
-            inventory: [],
-            relationships: {},
-            progress: 10
-        };
-        
-        this.story = this.createStory();
+        this.sceneActuelle = 0;
+        this.saisonActuelle = 1;
+        this.relations = {};
         this.init();
     }
 
-    createStory() {
+    init() {
+        this.scenes = this.creerScenes();
+        this.afficherScene(0);
+    }
+
+    creerScenes() {
         return [
+            // SCÈNE 0 - INTRODUCTION
             {
-                speaker: "Narrateur",
-                message: "Bienvenue à l'Académie Royale des Arts ! Tu viens tout juste d'arriver dans cette prestigieuse école. Le soleil brille sur les jardins magnifiques...",
-                choices: [
-                    { text: "Explorer les jardins", nextScene: 1, effects: { lovePoints: 5 } },
-                    { text: "Aller directement en classe", nextScene: 2, effects: { lovePoints: 2 } },
-                    { text: "Chercher la cafétéria", nextScene: 3, effects: { lovePoints: 3 } }
+                personnage: "Narrateur",
+                message: "Tu arrives devant les portes de l'Académie Royale des Arts. Le bâtiment est magnifique, mais tu sens une pointe de nervosité...",
+                choix: [
+                    { texte: "Prendre une grande inspiration et entrer", next: 1, effets: { courage: 5 } },
+                    { texte: "Observer les autres étudiants d'abord", next: 2, effets: { observation: 5 } },
+                    { texte: "Chercher quelqu'un pour demander son chemin", next: 3, effets: { sociabilite: 5 } }
                 ]
             },
+
+            // SCÈNE 1 - INTÉRIEUR ACADÉMIE
             {
-                speaker: "Narrateur",
-                message: "Dans les jardins, tu tombes sur un étudiant mystérieux en train de dessiner. Il te remarque et te sourit timidement.",
-                choices: [
-                    { text: "Lui demander ce qu'il dessine", nextScene: 4, effects: { lovePoints: 10 } },
-                    { text: "Sourire et continuer ton chemin", nextScene: 5, effects: { lovePoints: 5 } },
-                    { text: "Ignorer et chercher un endroit calme", nextScene: 6, effects: { lovePoints: 1 } }
+                personnage: "Narrateur", 
+                message: "L'intérieur est encore plus impressionnant. Des tableaux magnifiques ornent les murs. Un étudiant semble t'avoir remarqué...",
+                choix: [
+                    { texte: "Sourire timidement", next: 4, effets: { alex: 10 } },
+                    { texte: "Détourner le regard", next: 5, effets: { alex: 0 } },
+                    { texte: "Aller vers lui", next: 6, effets: { alex: 15, courage: 5 } }
                 ]
             },
+
+            // SCÈNE 4 - RENCONTRE ALEX
             {
-                speaker: "Sophia",
-                message: "Oh, bonjour ! Tu dois être le nouveau. Je suis Sophia, en section peinture. Ton style est vraiment mignon !",
-                choices: [
-                    { text: "Merci ! Ton style est incroyable aussi", nextScene: 7, effects: { lovePoints: 15 } },
-                    { text: "Enchanté, je cherche ma classe", nextScene: 8, effects: { lovePoints: 8 } },
-                    { text: "Peux-tu me montrer autour ?", nextScene: 9, effects: { lovePoints: 12 } }
+                personnage: "Alex",
+                message: "Salut ! Je ne t'ai jamais vu ici. Tu es nouveau ? Je m'appelle Alex, je suis en section peinture.",
+                choix: [
+                    { texte: \"Ravi de te rencontrer ! Je m'appelle [Ton Nom]\", next: 7, effets: { alex: 20 } },
+                    { texte: "Oui, je viens d'arriver. C'est immense ici !", next: 8, effets: { alex: 15 } },
+                    { texte: "Je cherche la salle de dessin...", next: 9, effets: { alex: 10 } }
                 ]
             },
+
+            // SCÈNE 7 - PREMIÈRE CONVERSATION
             {
-                speaker: "Alex",
-                message: "Je dessinais les roses... Elles sont magnifiques cette saison. Je m'appelle Alex. Tu aimes l'art ?",
-                choices: [
-                    { text: "J'adore ! Surtout la peinture", nextScene: 10, effects: { lovePoints: 20 } },
-                    { text: "Un peu, je débute", nextScene: 11, effects: { lovePoints: 12 } },
-                    { text: "Je préfère la musique", nextScene: 12, effects: { lovePoints: 8 } }
+                personnage: "Alex",
+                message: \"[Ton Nom], joli prénom ! Moi je passe mon temps dans l'atelier de peinture. Tu aimes l'art ?\",
+                choix: [
+                    { texte: \"J'adore ! Surtout la peinture à l'huile\", next: 10, effets: { alex: 25, pointsCommuns: 10 } },
+                    { texte: \"Je débute, mais je suis passionné\", next: 11, effets: { alex: 20, honnetete: 5 } },
+                    { texte: \"Je préfère la musique, en fait\", next: 12, effets: { alex: 10 } }
                 ]
             }
         ];
     }
 
-    init() {
-        this.loadGame();
-        this.displayScene(this.gameState.currentScene);
-        this.updateUI();
-    }
-
-    displayScene(sceneIndex) {
-        const scene = this.story[sceneIndex];
+    afficherScene(id) {
+        const scene = this.scenes[id];
         if (!scene) {
-            this.endChapter();
+            this.finChapitre();
             return;
         }
 
-        document.getElementById('speaker').textContent = scene.speaker;
+        // Met à jour l'interface
+        document.getElementById('speaker').textContent = scene.personnage;
         document.getElementById('message').textContent = scene.message;
 
-        const choicesContainer = document.getElementById('choicesContainer');
-        choicesContainer.innerHTML = '';
+        // Affiche les choix
+        const container = document.getElementById('choicesContainer');
+        container.innerHTML = '';
 
-        scene.choices.forEach((choice, index) => {
-            const choiceElement = document.createElement('div');
-            choiceElement.className = 'choice';
-            choiceElement.textContent = choice.text;
-            choiceElement.onclick = () => this.makeChoice(choice);
-            choicesContainer.appendChild(choiceElement);
+        scene.choix.forEach((choix, index) => {
+            const btn = document.createElement('div');
+            btn.className = 'choice';
+            btn.textContent = choix.texte;
+            btn.onclick = () => this.faireChoix(choix);
+            container.appendChild(btn);
         });
 
-        this.gameState.currentScene = sceneIndex;
-        this.updateProgress();
+        this.sceneActuelle = id;
     }
 
-    makeChoice(choice) {
-        // Appliquer les effets du choix
-        if (choice.effects) {
-            Object.keys(choice.effects).forEach(effect => {
-                this.gameState[effect] += choice.effects[effect];
+    faireChoix(choix) {
+        // Applique les effets
+        if (choix.effets) {
+            Object.entries(choix.effets).forEach(([key, value]) => {
+                if (!this.relations[key]) this.relations[key] = 0;
+                this.relations[key] += value;
             });
         }
 
-        // Animation de feedback
-        this.showLoveAnimation(choice.effects.lovePoints);
+        // Animation simple
+        this.showFeedback(choix.effets);
 
-        // Passer à la scène suivante
+        // Scene suivante
         setTimeout(() => {
-            this.displayScene(choice.nextScene);
-            this.updateUI();
-            this.saveGame();
-        }, 800);
+            this.afficherScene(choix.next);
+        }, 500);
     }
 
-    showLoveAnimation(points) {
-        const animation = document.createElement('div');
-        animation.style.cssText = `
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 2em;
-            color: #e75480;
-            z-index: 1000;
-            animation: floatUp 1s ease-out;
-        `;
+    showFeedback(effets) {
+        console.log("Effets du choix:", effets);
+        // Tu peux ajouter des animations ici
+    }
+
+    finChapitre() {
+        alert("🎉 Fin du chapitre !\n\n" +
+              `Progression relations:\n` +
+              `Alex: ${this.relations.alex || 0}/100\n` +
+              `Courage: ${this.relations.courage || 0}/50`);
         
-        animation.textContent = points > 0 ? `+${points} 💖` : `${points} 💔`;
-        document.body.appendChild(animation);
-
-        setTimeout(() => {
-            document.body.removeChild(animation);
-        }, 1000);
-    }
-
-    updateUI() {
-        document.getElementById('lovePoints').textContent = this.gameState.lovePoints;
-        document.getElementById('diamonds').textContent = this.gameState.diamonds;
-        
-        // Mettre à jour l'animal
-        this.updatePetDisplay();
-        
-        // Mettre à jour la progression
-        this.updateProgress();
-    }
-
-    updatePetDisplay() {
-        const hungerFill = document.querySelector('.hunger-fill');
-        const happinessFill = document.querySelector('.happiness-fill');
-        
-        if (hungerFill && happinessFill) {
-            hungerFill.style.width = `${this.gameState.pet.hunger}%`;
-            happinessFill.style.width = `${this.gameState.pet.happiness}%`;
-        }
-    }
-
-    updateProgress() {
-        const progress = ((this.gameState.currentScene + 1) / this.story.length) * 100;
-        document.getElementById('progressFill').style.width = `${progress}%`;
-    }
-
-    // Système Animal de Compagnie
-    feedPet() {
-        if (this.gameState.pet.hunger < 100) {
-            this.gameState.pet.hunger += 20;
-            this.gameState.pet.happiness += 10;
-            if (this.gameState.pet.hunger > 100) this.gameState.pet.hunger = 100;
-            if (this.gameState.pet.happiness > 100) this.gameState.pet.happiness = 100;
-            this.updateUI();
-            this.showMessage("🍖 Mimi a été nourri !");
-        }
-    }
-
-    playWithPet() {
-        if (this.gameState.pet.happiness < 100) {
-            this.gameState.pet.happiness += 15;
-            this.gameState.pet.hunger -= 5;
-            if (this.gameState.pet.happiness > 100) this.gameState.pet.happiness = 100;
-            if (this.gameState.pet.hunger < 0) this.gameState.pet.hunger = 0;
-            this.updateUI();
-            this.showMessage("🎾 Mimi s'amuse !");
-        }
-    }
-
-    // Système de Garde-Robe
-    changeOutfit(outfitIndex) {
-        this.gameState.playerOutfit = outfitIndex;
-        const outfits = document.querySelectorAll('.outfit');
-        outfits.forEach((outfit, index) => {
-            outfit.classList.toggle('active', index === outfitIndex);
-        });
-        this.showMessage(`👗 Tenue changée !`);
-    }
-
-    // Système de Sauvegarde
-    saveGame() {
-        localStorage.setItem('romanceRoyaleSave', JSON.stringify(this.gameState));
-        this.showMessage("💾 Jeu sauvegardé !");
-    }
-
-    loadGame() {
-        const saved = localStorage.getItem('romanceRoyaleSave');
-        if (saved) {
-            this.gameState = { ...this.gameState, ...JSON.parse(saved) };
-            this.showMessage("📂 Partie chargée !");
-        }
-    }
-
-    // Fin de chapitre
-    endChapter() {
-        const message = `🎉 Chapitre terminé !\n\nPoints d'amour: ${this.gameState.lovePoints}\nDiamants: ${this.gameState.diamonds}\n\nPrépare-toi pour le prochain chapitre !`;
-        alert(message);
-        this.gameState.currentScene = 0;
-        this.displayScene(0);
-    }
-
-    showMessage(text) {
-        const messageDiv = document.createElement('div');
-        messageDiv.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--rose-principal);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            z-index: 1000;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        `;
-        messageDiv.textContent = text;
-        document.body.appendChild(messageDiv);
-
-        setTimeout(() => {
-            document.body.removeChild(messageDiv);
-        }, 3000);
+        // Recommencer ou sauvegarder
+        this.sceneActuelle = 0;
+        this.afficherScene(0);
     }
 }
 
-// Menu flottant
-function toggleMenu() {
-    const menu = document.getElementById('menuContent');
-    menu.classList.toggle('show');
+// 🚀 DÉMARRAGE DU JEU
+let jeu;
+
+function demarrerJeu() {
+    jeu = new HistoireManager();
 }
 
-function showSettings() {
-    alert('⚙️ Paramètres - En développement !');
-}
-
-// Initialisation du jeu
-let game;
-
-document.addEventListener('DOMContentLoaded', function() {
-    game = new RomanceGame();
-    
-    // Styles d'animation supplémentaires
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes floatUp {
-            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
-            50% { transform: translate(-50%, -70%) scale(1.2); opacity: 1; }
-            100% { transform: translate(-50%, -100%) scale(0.8); opacity: 0; }
-        }
-    `;
-    document.head.appendChild(style);
-});
-
-// Fonctions globales pour les boutons HTML
-function makeChoice(index) {
-    // Cette fonction est gérée par la classe
-}
-
-function feedPet() {
-    if (game) game.feedPet();
-}
-
-function playWithPet() {
-    if (game) game.playWithPet();
-}
-
-function changeOutfit(index) {
-    if (game) game.changeOutfit(index);
-}
-
-function saveGame() {
-    if (game) game.saveGame();
-}
-
-function loadGame() {
-    if (game) game.loadGame();
-    if (game) game.updateUI();
+// Démarre quand la page est prête
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', demarrerJeu);
+} else {
+    demarrerJeu();
 }
