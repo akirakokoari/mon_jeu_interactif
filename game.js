@@ -1,121 +1,150 @@
-// DANS game.js - NOUVEAU SYSTÈME DE SAUVEGARDE
-class AdvancedGame {
+// 🎮 SYSTÈME DE JEU COMPLET - ROMANCE ACADEMY
+
+class RomanceGame {
     constructor() {
         this.gameData = {
-            scene: 0,
-            relations: {},
+            currentScreen: 'mainMenu',
+            storyProgress: {
+                saison1: { currentScene: 0, completed: false }
+            },
+            player: {
+                name: "Joueur",
+                diamonds: 150,
+                outfits: [0],
+                currentOutfit: 0
+            },
+            relationships: {},
             inventory: [],
-            playerName: "Joueur",
-            version: "1.0"
-        };
-        this.story = this.createAdvancedStory();
-    }
-
-    // SYSTÈME DE SAUVEGARDE AVEC CODE
-    saveGame() {
-        const saveCode = btoa(JSON.stringify(this.gameData));
-        localStorage.setItem('romanceSave', saveCode);
-        
-        // Affiche le code pour partager
-        alert(`💾 SAUVEGARDÉ !\n\nCode de sauvegarde :\n${saveCode}\n\nCopie ce code pour reprendre plus tard !`);
-        return saveCode;
-    }
-
-    loadGame(saveCode = null) {
-        try {
-            const code = saveCode || localStorage.getItem('romanceSave');
-            if (code) {
-                const savedData = JSON.parse(atob(code));
-                this.gameData = { ...this.gameData, ...savedData };
-                this.showScene(this.gameData.scene);
-                alert('✅ Partie chargée !');
+            settings: {
+                musicVolume: 50,
+                effectsVolume: 70
             }
-        } catch (e) {
-            alert('❌ Code de sauvegarde invalide');
+        };
+        
+        this.story = this.createStory();
+        this.init();
+    }
+
+    init() {
+        this.loadGame();
+        this.showScreen('loadingScreen');
+        
+        // Simulation du chargement
+        setTimeout(() => {
+            this.showScreen('mainMenu');
+        }, 3000);
+    }
+
+    createStory() {
+        return {
+            saison1: [
+                {
+                    background: 'fond-academie.jpg',
+                    characters: {
+                        left: { image: 'perso_alex.png', position: 'left' },
+                        right: null
+                    },
+                    speaker: "Narrateur",
+                    text: "Tu arrives devant l'Académie des Arts, le cœur battant. Cet endroit est magnifique...",
+                    choices: [
+                        { text: "Entrer avec confiance", next: 1, effects: { courage: 5 } },
+                        { text: "Observer les environs", next: 2, effects: { observation: 5 } }
+                    ]
+                },
+                {
+                    background: 'fond-couloir.jpg',
+                    characters: {
+                        left: { image: 'perso_alex.png', position: 'left' },
+                        right: null
+                    },
+                    speaker: "Alex",
+                    text: "Oh, bonjour ! Tu es nouveau ici ? Je m'appelle Alex.",
+                    choices: [
+                        { text: \"Salut ! Je m'appelle...\", next: 3, effects: { alex: 10 } },
+                        { text: "Oui, je cherche ma classe", next: 4, effects: { alex: 5 } }
+                    ]
+                }
+            ]
+        };
+    }
+
+    // 🎯 SYSTÈME DE NAVIGATION
+    showScreen(screenName) {
+        // Cache tous les écrans
+        document.querySelectorAll('.screen').forEach(screen => {
+            screen.classList.add('hidden');
+        });
+        
+        // Montre l'écran demandé
+        document.getElementById(screenName).classList.remove('hidden');
+        this.gameData.currentScreen = screenName;
+        
+        // Met à jour l'interface selon l'écran
+        this.updateScreen(screenName);
+    }
+
+    updateScreen(screenName) {
+        switch(screenName) {
+            case 'wardrobe':
+                this.updateWardrobe();
+                break;
+            case 'bedroom':
+                this.updateBedroom();
+                break;
+            case 'gameScreen':
+                this.loadScene();
+                break;
         }
     }
 
-    // HISTOIRE AVANCÉE AVEC VRAIS DIALOGUES
-    createAdvancedStory() {
-        return [
-            // CHAPITRE 1 - LA RENCONTRE
-            {
-                background: "fond-academie.jpg",
-                characters: {
-                    left: { image: "perso_alex.png", emotion: "neutre" },
-                    right: null
-                },
-                speaker: "Narrateur",
-                text: "Tu arrives devant la prestigieuse Académie des Arts. Le cœur battant, tu pousses les lourdes portes...",
-                choices: [
-                    { text: "Prendre une profonde inspiration", next: 1, effects: {} },
-                    { text: "Regarder autour avec curiosité", next: 2, effects: {} }
-                ]
-            },
-            {
-                background: "fond-couloir.jpg", 
-                characters: {
-                    left: { image: "perso_alex.png", emotion: "sourire" },
-                    right: null
-                },
-                speaker: "Alex",
-                text: "Oh, bonjour ! Je ne t'ai jamais vu ici. Tu es nouveau ? Je m'appelle Alex.",
-                choices: [
-                    { text: \"Salut ! Je m'appelle... [ton nom]\", next: 3, effects: { alex: 10 } },
-                    { text: "Oui, je viens d'arriver. C'est immense !", next: 4, effects: { alex: 5 } }
-                ]
-            },
-            {
-                background: "fond-couloir.jpg",
-                characters: {
-                    left: { image: "perso_alex.png", emotion: "curieux" },
-                    right: null
-                },
-                speaker: "Alex",
-                text: \"[ton nom], joli prénom ! Moi je suis en section peinture. Et toi, tu es ici pour quoi ?\",
-                choices: [
-                    { text: "La peinture aussi !", next: 5, effects: { alex: 15 } },
-                    { text: "La musique, plutôt", next: 6, effects: { alex: 8 } },
-                    { text: "Je ne sais pas encore...", next: 7, effects: { alex: 3 } }
-                ]
-            }
-        ];
+    // 🎭 SYSTÈME D'HISTOIRE
+    startStory(storyId) {
+        this.showScreen('gameScreen');
+        this.gameData.storyProgress[storyId].currentScene = 0;
+        this.loadScene();
     }
 
-    showScene(sceneId) {
-        const scene = this.story[sceneId];
-        if (!scene) return;
+    loadScene() {
+        const story = this.story.saison1;
+        const sceneId = this.gameData.storyProgress.saison1.currentScene;
+        const scene = story[sceneId];
+        
+        if (!scene) {
+            this.endChapter();
+            return;
+        }
 
-        // Met à jour l'interface
+        // Met à jour le fond
+        document.getElementById('gameBackground').style.backgroundImage = `url('${scene.background}')`;
+        
+        // Met à jour les personnages
+        this.displayCharacters(scene.characters);
+        
+        // Met à jour le dialogue
         document.getElementById('speakerName').textContent = scene.speaker;
         document.getElementById('dialogueText').textContent = scene.text;
-
-        // Change le fond
-        document.querySelector('.game-container').style.backgroundImage = `url('${scene.background}')`;
-
-        // Affiche les personnages
-        this.displayCharacters(scene.characters);
-
-        // Affiche les choix
+        
+        // Met à jour les choix
         this.displayChoices(scene.choices);
-
-        this.gameData.scene = sceneId;
     }
 
-    displayCharacters(chars) {
+    displayCharacters(characters) {
         // Implémente l'affichage des personnages
+        // Pour l'instant, on utilise des émojis
+        document.getElementById('characterLeft').textContent = characters.left ? '👨‍🎓' : '';
+        document.getElementById('characterRight').textContent = characters.right ? '👩‍🎓' : '';
     }
 
     displayChoices(choices) {
         const container = document.getElementById('choicesContainer');
         container.innerHTML = '';
-
+        
         choices.forEach((choice, index) => {
-            const btn = document.createElement('button');
-            btn.className = 'choice-btn';
-            btn.textContent = choice.text;
-            btn.onclick = () => this.makeChoice(choice);
-            container.appendChild(btn);
+            const button = document.createElement('button');
+            button.className = 'choice-btn';
+            button.textContent = choice.text;
+            button.onclick = () => this.makeChoice(choice);
+            container.appendChild(button);
         });
     }
 
@@ -123,33 +152,124 @@ class AdvancedGame {
         // Applique les effets
         if (choice.effects) {
             Object.entries(choice.effects).forEach(([key, value]) => {
-                if (!this.gameData.relations[key]) this.gameData.relations[key] = 0;
-                this.gameData.relations[key] += value;
+                if (!this.gameData.relationships[key]) this.gameData.relationships[key] = 0;
+                this.gameData.relationships[key] += value;
             });
         }
 
-        this.showScene(choice.next);
+        // Passe à la scène suivante
+        this.gameData.storyProgress.saison1.currentScene = choice.next;
+        this.loadScene();
+        this.saveGame();
+    }
+
+    // 👗 SYSTÈME GARDE-ROBE
+    updateWardrobe() {
+        document.getElementById('outfitDisplay').textContent = this.getOutfitEmoji(this.gameData.player.currentOutfit);
+        
+        // Met à jour la sélection des tenues
+        document.querySelectorAll('.outfit-item').forEach((item, index) => {
+            if (index === this.gameData.player.currentOutfit) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+    }
+
+    changeOutfit(outfitId) {
+        if (this.gameData.player.outfits.includes(outfitId)) {
+            this.gameData.player.currentOutfit = outfitId;
+            this.updateWardrobe();
+        }
+    }
+
+    getOutfitEmoji(outfitId) {
+        const emojis = ['👚', '👗', '🥻', '👘'];
+        return emojis[outfitId] || '👚';
+    }
+
+    // 🏠 SYSTÈME CHAMBRE
+    updateBedroom() {
+        // Met à jour l'affichage de la chambre
+        document.getElementById('roomPet').textContent = '🐱'; // Ton animal
+    }
+
+    // 💾 SYSTÈME DE SAUVEGARDE
+    saveGame() {
+        const saveData = btoa(JSON.stringify(this.gameData));
+        localStorage.setItem('romanceAcademySave', saveData);
+    }
+
+    loadGame() {
+        const saved = localStorage.getItem('romanceAcademySave');
+        if (saved) {
+            try {
+                this.gameData = { ...this.gameData, ...JSON.parse(atob(saved)) };
+            } catch (e) {
+                console.log('Aucune sauvegarde trouvée');
+            }
+        }
+    }
+
+    generateSaveCode() {
+        const saveCode = btoa(JSON.stringify(this.gameData));
+        alert(`💾 CODE DE SAUVEGARDE :\n\n${saveCode}\n\nCopie ce code pour reprendre ta partie !`);
+        return saveCode;
+    }
+
+    loadFromCode() {
+        const code = prompt('Colle ton code de sauvegarde :');
+        if (code) {
+            try {
+                this.gameData = JSON.parse(atob(code));
+                this.showScreen('mainMenu');
+                alert('✅ Partie chargée avec succès !');
+            } catch (e) {
+                alert('❌ Code invalide !');
+            }
+        }
+    }
+
+    endChapter() {
+        alert('🎉 Chapitre terminé !\n\nRetour au menu principal.');
+        this.showScreen('mainMenu');
     }
 }
 
-// FONCTIONS GLOBALES
+// 🚀 INITIALISATION DU JEU
 let game;
 
-function startGame() {
-    document.getElementById('mainMenu').classList.add('hidden');
-    document.getElementById('gameScreen').classList.remove('hidden');
-    
-    game = new AdvancedGame();
-    game.showScene(0);
+// Fonctions globales pour les boutons HTML
+function showScreen(screenName) {
+    if (game) game.showScreen(screenName);
 }
 
-function loadGame() {
-    const saveCode = prompt("Colle ton code de sauvegarde :");
-    if (saveCode) {
-        document.getElementById('mainMenu').classList.add('hidden');
-        document.getElementById('gameScreen').classList.remove('hidden');
-        
-        game = new AdvancedGame();
-        game.loadGame(saveCode);
-    }
+function startStory(storyId) {
+    if (game) game.startStory(storyId);
 }
+
+function changeOutfit(outfitId) {
+    if (game) game.changeOutfit(outfitId);
+}
+
+function saveGame() {
+    if (game) game.saveGame();
+}
+
+function generateSaveCode() {
+    if (game) game.generateSaveCode();
+}
+
+function makeChoice(choiceIndex) {
+    // Géré par la classe
+}
+
+function showSettings() {
+    showScreen('settings');
+}
+
+// Démarrage du jeu
+document.addEventListener('DOMContentLoaded', function() {
+    game = new RomanceGame();
+});
