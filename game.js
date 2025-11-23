@@ -1,103 +1,69 @@
-// SYSTÈME TRÈS SIMPLE - ÇA MARCHE !
-let gameData = {
-    scene: 0,
-    alex: 0
-};
+v// game.js - CODE TRÈS SIMPLE
+let sceneActuelle = 0;
 
-const story = [
-    // SCÈNE 0
+const histoire = [
     {
         personnage: "Narrateur",
-        texte: "Tu arrives à l'Académie. C'est ton premier jour...",
+        texte: "Tu arrives à l'Académie des Arts. C'est ton premier jour...",
         choix: [
             { texte: "Entrer dans le bâtiment", next: 1 },
             { texte: "Explorer le jardin", next: 2 }
         ]
     },
-    // SCÈNE 1
     {
         personnage: "Alex",
         texte: "Salut ! Tu es nouveau ici ? Je m'appelle Alex.",
         choix: [
-            { texte: "Ravi de te rencontrer !", next: 3, effet: { alex: 10 } },
-            { texte: "Oui, je cherche ma classe", next: 4, effet: { alex: 5 } }
+            { texte: "Ravi de te rencontrer !", next: 3 },
+            { texte: "Oui, je cherche ma classe", next: 4 }
         ]
     },
-    // SCÈNE 3
     {
-        personnage: "Alex", 
-        texte: "Moi je suis en peinture. Et toi, tu aimes l'art ?",
+        personnage: "Alex",
+        texte: "Super ! Moi je suis en section peinture. Et toi ?",
         choix: [
-            { texte: "J'adore !", next: 5, effet: { alex: 15 } },
-            { texte: "Je préfère la musique", next: 6, effet: { alex: 8 } }
+            { texte: "Moi aussi !", next: 5 },
+            { texte: "Je préfère la musique", next: 6 }
         ]
     }
 ];
 
-// FONCTIONS SIMPLES
 function demarrerJeu() {
-    document.getElementById('mainMenu').classList.add('hidden');
-    document.getElementById('gameScreen').classList.remove('hidden');
+    document.getElementById('mainMenu').style.display = 'none';
+    document.getElementById('gameScreen').style.display = 'block';
     chargerScene(0);
 }
 
 function chargerScene(id) {
-    const scene = story[id];
-    if (!scene) return;
-    
-    gameData.scene = id;
+    sceneActuelle = id;
+    const scene = histoire[id];
     
     document.getElementById('speakerName').textContent = scene.personnage;
     document.getElementById('dialogueText').textContent = scene.texte;
     
-    const choixContainer = document.getElementById('choicesContainer');
-    choixContainer.innerHTML = '';
+    const container = document.getElementById('choicesContainer');
+    container.innerHTML = '';
     
     scene.choix.forEach(choix => {
         const bouton = document.createElement('button');
-        bouton.className = 'choice-btn';
         bouton.textContent = choix.texte;
-        bouton.onclick = () => faireChoix(choix);
-        choixContainer.appendChild(bouton);
+        bouton.onclick = () => chargerScene(choix.next);
+        bouton.style.cssText = `
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0;
+            background: #ff9eb5;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        `;
+        container.appendChild(bouton);
     });
 }
 
-function faireChoix(choix) {
-    if (choix.effet) {
-        Object.keys(choix.effet).forEach(cle => {
-            gameData[cle] += choix.effet[cle];
-        });
-    }
-    chargerScene(choix.next);
+function montrerMenu() {
+    document.getElementById('gameScreen').style.display = 'none';
+    document.getElementById('mainMenu').style.display = 'block';
 }
-
-function montrerEcran(nomEcran) {
-    // Cache tout
-    document.querySelectorAll('.screen').forEach(ecran => {
-        ecran.classList.add('hidden');
-    });
-    // Montre l'écran demandé
-    document.getElementById(nomEcran).classList.remove('hidden');
-}
-
-// SAUVEGARDE SIMPLE
-function sauvegarder() {
-    localStorage.setItem('jeuSauvegarde', JSON.stringify(gameData));
-    alert('💾 Sauvegardé !');
-}
-
-function charger() {
-    const sauvegarde = localStorage.getItem('jeuSauvegarde');
-    if (sauvegarde) {
-        gameData = JSON.parse(sauvegarde);
-        chargerScene(gameData.scene);
-    }
-}
-
-// QUAND LA PAGE CHARGE
-document.addEventListener('DOMContentLoaded', function() {
-    // Cache l'écran de chargement après 1 sec
-    setTimeout(() => {
-        montrerEcran('mainMenu');
-    }, 1000);
-});
