@@ -1,19 +1,68 @@
-<!-- ÉCRAN DE CHARGEMENT SIMPLE -->
-<div id="loadingScreen" class="screen">
-    <div style="text-align: center; padding-top: 50vh;">
-        <div style="font-size: 3em;">🌸</div>
-        <div>Chargement...</div>
+<!-- index.html - CODE SIMPLE -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Mon Jeu</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: pink;
+            margin: 0;
+            padding: 20px;
+        }
+        .screen {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .choice-btn {
+            background: #ff9eb5;
+            color: white;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .menu-btn {
+            background: #e75480;
+            color: white;
+            padding: 20px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <!-- MENU PRINCIPAL -->
+    <div id="mainMenu" class="screen">
+        <h1 style="text-align: center; color: #e75480;">🌸 ROMANCE ACADEMY 🌸</h1>
+        <button class="menu-btn" onclick="demarrerJeu()">🎮 COMMENCER</button>
+        <button class="menu-btn" onclick="alert('Fonction à ajouter')">📂 CONTINUER</button>
     </div>
-</div>
 
-<!-- MENU PRINCIPAL SIMPLE -->
-<div id="mainMenu" class="screen hidden">
-    <div style="text-align: center; padding-top: 30vh;">
-        <h1 style="color: #ff9eb5; font-size: 2.5em;">ROMANCE ACADEMY</h1>
-        <div style="display: flex; flex-direction: column; gap: 15px; align-items: center; margin-top: 50px;">
-            <button class="menu-btn" onclick="demarrerJeu()">🎮 COMMENCER</button>
-            <button class="menu-btn" onclick="charger()">📂 CONTINUER</button>
-            <button class="menu-btn" onclick="sauvegarder()">💾 SAUVEGARDER</button>
+    <!-- ÉCRAN DE JEU -->
+    <div id="gameScreen" class="screen" style="display: none;">
+        <div style="background: #ffe6e6; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <div style="color: #e75480; font-weight: bold;" id="speakerName">Narrateur</div>
+            <div style="margin-top: 10px;" id="dialogueText">Bienvenue !</div>
         </div>
+        
+        <div id="choicesContainer">
+            <button class="choice-btn" onclick="demarrerJeu()">Commencer</button>
+        </div>
+        
+        <button class="choice-btn" onclick="montrerMenu()" style="background: #666;">← Retour au menu</button>
     </div>
-</div>
+
+    <script src="game.js"></script>
+</body>
+</html>
