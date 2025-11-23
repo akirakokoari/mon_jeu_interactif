@@ -1,4 +1,4 @@
-// 🎮 SYSTÈME DE JEU COMPLET - ROMANCE ACADEMY
+// 🎮 SYSTÈME DE JEU CORRIGÉ - ROMANCE ACADEMY
 
 class RomanceGame {
     constructor() {
@@ -22,7 +22,6 @@ class RomanceGame {
         };
         
         this.story = this.createStory();
-        this.init();
     }
 
     init() {
@@ -32,7 +31,7 @@ class RomanceGame {
         // Simulation du chargement
         setTimeout(() => {
             this.showScreen('mainMenu');
-        }, 3000);
+        }, 2000);
     }
 
     createStory() {
@@ -41,7 +40,7 @@ class RomanceGame {
                 {
                     background: 'fond-academie.jpg',
                     characters: {
-                        left: { image: 'perso_alex.png', position: 'left' },
+                        left: { image: 'perso_alex.png', name: "Alex", emotion: "sourire" },
                         right: null
                     },
                     speaker: "Narrateur",
@@ -54,13 +53,13 @@ class RomanceGame {
                 {
                     background: 'fond-couloir.jpg',
                     characters: {
-                        left: { image: 'perso_alex.png', position: 'left' },
+                        left: { image: 'perso_alex.png', name: "Alex", emotion: "curieux" },
                         right: null
                     },
                     speaker: "Alex",
                     text: "Oh, bonjour ! Tu es nouveau ici ? Je m'appelle Alex.",
                     choices: [
-                        { text: \"Salut ! Je m'appelle...\", next: 3, effects: { alex: 10 } },
+                        { text: "Salut ! Ravi de te rencontrer", next: 3, effects: { alex: 10 } },
                         { text: "Oui, je cherche ma classe", next: 4, effects: { alex: 5 } }
                     ]
                 }
@@ -70,17 +69,20 @@ class RomanceGame {
 
     // 🎯 SYSTÈME DE NAVIGATION
     showScreen(screenName) {
+        console.log("Navigation vers:", screenName);
+        
         // Cache tous les écrans
         document.querySelectorAll('.screen').forEach(screen => {
             screen.classList.add('hidden');
         });
         
         // Montre l'écran demandé
-        document.getElementById(screenName).classList.remove('hidden');
-        this.gameData.currentScreen = screenName;
-        
-        // Met à jour l'interface selon l'écran
-        this.updateScreen(screenName);
+        const targetScreen = document.getElementById(screenName);
+        if (targetScreen) {
+            targetScreen.classList.remove('hidden');
+            this.gameData.currentScreen = screenName;
+            this.updateScreen(screenName);
+        }
     }
 
     updateScreen(screenName) {
@@ -114,12 +116,6 @@ class RomanceGame {
             return;
         }
 
-        // Met à jour le fond
-        document.getElementById('gameBackground').style.backgroundImage = `url('${scene.background}')`;
-        
-        // Met à jour les personnages
-        this.displayCharacters(scene.characters);
-        
         // Met à jour le dialogue
         document.getElementById('speakerName').textContent = scene.speaker;
         document.getElementById('dialogueText').textContent = scene.text;
@@ -129,8 +125,7 @@ class RomanceGame {
     }
 
     displayCharacters(characters) {
-        // Implémente l'affichage des personnages
-        // Pour l'instant, on utilise des émojis
+        // Pour l'instant avec émojis
         document.getElementById('characterLeft').textContent = characters.left ? '👨‍🎓' : '';
         document.getElementById('characterRight').textContent = characters.right ? '👩‍🎓' : '';
     }
@@ -149,7 +144,6 @@ class RomanceGame {
     }
 
     makeChoice(choice) {
-        // Applique les effets
         if (choice.effects) {
             Object.entries(choice.effects).forEach(([key, value]) => {
                 if (!this.gameData.relationships[key]) this.gameData.relationships[key] = 0;
@@ -157,24 +151,14 @@ class RomanceGame {
             });
         }
 
-        // Passe à la scène suivante
         this.gameData.storyProgress.saison1.currentScene = choice.next;
         this.loadScene();
         this.saveGame();
     }
 
-    // 👗 SYSTÈME GARDE-ROBE
+    // 👗 GARDE-ROBE
     updateWardrobe() {
         document.getElementById('outfitDisplay').textContent = this.getOutfitEmoji(this.gameData.player.currentOutfit);
-        
-        // Met à jour la sélection des tenues
-        document.querySelectorAll('.outfit-item').forEach((item, index) => {
-            if (index === this.gameData.player.currentOutfit) {
-                item.classList.add('active');
-            } else {
-                item.classList.remove('active');
-            }
-        });
     }
 
     changeOutfit(outfitId) {
@@ -189,13 +173,12 @@ class RomanceGame {
         return emojis[outfitId] || '👚';
     }
 
-    // 🏠 SYSTÈME CHAMBRE
+    // 🏠 CHAMBRE
     updateBedroom() {
-        // Met à jour l'affichage de la chambre
-        document.getElementById('roomPet').textContent = '🐱'; // Ton animal
+        document.getElementById('roomPet').textContent = '🐱';
     }
 
-    // 💾 SYSTÈME DE SAUVEGARDE
+    // 💾 SAUVEGARDE
     saveGame() {
         const saveData = btoa(JSON.stringify(this.gameData));
         localStorage.setItem('romanceAcademySave', saveData);
@@ -207,40 +190,27 @@ class RomanceGame {
             try {
                 this.gameData = { ...this.gameData, ...JSON.parse(atob(saved)) };
             } catch (e) {
-                console.log('Aucune sauvegarde trouvée');
+                console.log('Nouvelle partie');
             }
         }
     }
 
     generateSaveCode() {
         const saveCode = btoa(JSON.stringify(this.gameData));
-        alert(`💾 CODE DE SAUVEGARDE :\n\n${saveCode}\n\nCopie ce code pour reprendre ta partie !`);
+        alert(`💾 CODE DE SAUVEGARDE :\n\n${saveCode}`);
         return saveCode;
     }
 
-    loadFromCode() {
-        const code = prompt('Colle ton code de sauvegarde :');
-        if (code) {
-            try {
-                this.gameData = JSON.parse(atob(code));
-                this.showScreen('mainMenu');
-                alert('✅ Partie chargée avec succès !');
-            } catch (e) {
-                alert('❌ Code invalide !');
-            }
-        }
-    }
-
     endChapter() {
-        alert('🎉 Chapitre terminé !\n\nRetour au menu principal.');
+        alert('🎉 Chapitre terminé !');
         this.showScreen('mainMenu');
     }
 }
 
-// 🚀 INITIALISATION DU JEU
+// 🚀 INITIALISATION
 let game;
 
-// Fonctions globales pour les boutons HTML
+// FONCTIONS GLOBALES
 function showScreen(screenName) {
     if (game) game.showScreen(screenName);
 }
@@ -261,15 +231,12 @@ function generateSaveCode() {
     if (game) game.generateSaveCode();
 }
 
-function makeChoice(choiceIndex) {
-    // Géré par la classe
-}
-
 function showSettings() {
     showScreen('settings');
 }
 
-// Démarrage du jeu
+// DÉMARRAGE
 document.addEventListener('DOMContentLoaded', function() {
     game = new RomanceGame();
+    game.init();
 });
