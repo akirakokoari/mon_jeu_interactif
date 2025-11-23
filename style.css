@@ -1,14 +1,3 @@
-/* STYLE AMOUR SUCRÉ */
-:root {
-    --rose: #ff9eb5;
-    --rose-clair: #ffd1dc;
-    --rose-fonce: #e75480;
-    --violet: #c8a2c8;
-    --or: #ffd700;
-    --blanc: #fffaf0;
-    --texte: #5a5a5a;
-}
-
 * {
     margin: 0;
     padding: 0;
@@ -17,191 +6,93 @@
 
 body {
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, var(--rose-clair), var(--violet));
-    color: var(--texte);
-    overflow: hidden;
+    background: linear-gradient(135deg, #ff9eb5, #c8a2c8);
     height: 100vh;
+    overflow: hidden;
+    color: #333;
 }
 
-/* ÉCRANS */
 .screen {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    transition: opacity 0.3s ease;
-}
-
-.hidden {
     display: none;
 }
 
-/* ÉCRAN DE CHARGEMENT */
-#loadingScreen {
-    background: linear-gradient(135deg, var(--rose), var(--violet));
+.active {
+    display: block;
+}
+
+/* === MENU PRINCIPAL === */
+#mainMenu {
+    background: linear-gradient(135deg, #ff9eb5, #c8a2c8);
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
-    z-index: 1000;
-}
-
-.loading-content {
-    text-align: center;
-    color: white;
-}
-
-.loading-logo {
-    font-size: 4em;
-    margin-bottom: 20px;
-    animation: pulse 2s infinite;
-}
-
-.loading-bar {
-    width: 200px;
-    height: 10px;
-    background: rgba(255,255,255,0.3);
-    border-radius: 10px;
-    margin: 20px auto;
-    overflow: hidden;
-}
-
-.loading-progress {
-    height: 100%;
-    background: white;
-    border-radius: 10px;
-    animation: loading 3s ease-in-out;
-}
-
-@keyframes loading {
-    0% { width: 0%; }
-    100% { width: 100%; }
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-}
-
-/* MENU PRINCIPAL */
-.menu-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('fond-menu.jpg') center/cover;
-    filter: brightness(0.7);
+    align-items: center;
 }
 
 .menu-content {
-    position: relative;
-    z-index: 2;
     text-align: center;
-    padding-top: 10vh;
 }
 
 .game-title {
-    font-size: 3em;
+    font-size: 4em;
     color: white;
-    text-shadow: 3px 3px 0 var(--rose-fonce);
+    text-shadow: 3px 3px 0 #e75480;
     margin-bottom: 50px;
-    font-weight: bold;
 }
 
-.menu-buttons {
+.main-menu-buttons {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 15px;
+    gap: 20px;
 }
 
 .menu-btn {
     background: rgba(255, 255, 255, 0.9);
-    border: 3px solid var(--rose);
-    padding: 15px 30px;
-    border-radius: 25px;
-    font-size: 1.2em;
+    border: 3px solid #ff9eb5;
+    padding: 20px 40px;
+    border-radius: 30px;
+    font-size: 1.3em;
     cursor: pointer;
     transition: all 0.3s ease;
-    width: 250px;
-}
-
-.menu-btn.large {
-    font-size: 1.3em;
-    padding: 20px 40px;
-    background: linear-gradient(135deg, var(--rose), var(--violet));
-    color: white;
-    border: none;
+    min-width: 300px;
 }
 
 .menu-btn:hover {
+    background: #ff9eb5;
+    color: white;
     transform: translateY(-5px);
     box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 
-/* HEADER DES SOUS-MENUS */
-.header {
-    background: linear-gradient(135deg, var(--rose), var(--violet));
-    padding: 20px;
-    color: white;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.back-btn {
-    background: rgba(255,255,255,0.2);
-    border: 2px solid white;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.back-btn:hover {
-    background: white;
-    color: var(--rose-fonce);
-}
-
-/* CARTES D'HISTOIRE */
-.story-cards {
-    padding: 20px;
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-}
-
-.story-card {
-    background: white;
-    border-radius: 15px;
-    padding: 20px;
-    width: 200px;
-    text-align: center;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.story-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-}
-
-.story-card.locked {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.story-cover {
-    font-size: 3em;
-    margin-bottom: 15px;
-}
-
-/* ÉCRAN DE JEU */
+/* === ÉCRAN DE JEU === */
 #gameScreen {
     background: #000;
+}
+
+.player-stats {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 20px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    z-index: 100;
+}
+
+.stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.1em;
 }
 
 .game-background {
@@ -210,104 +101,145 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
+    background: linear-gradient(135deg, #87ceeb, #98fb98);
     background-size: cover;
     background-position: center;
 }
 
 .character-container {
     position: absolute;
-    bottom: 0;
+    bottom: 200px;
     width: 100%;
-    height: 70%;
     display: flex;
     justify-content: space-around;
     align-items: flex-end;
+    height: 400px;
 }
 
 .character {
-    width: 300px;
-    height: 400px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: bottom;
-    transition: all 0.5s ease;
+    text-align: center;
 }
 
-/* INTERFACE DE DIALOGUE */
+.character-avatar {
+    width: 200px;
+    height: 300px;
+    font-size: 8em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.character-name {
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin-top: 10px;
+    display: inline-block;
+}
+
 .dialogue-interface {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.85);
     color: white;
-    padding: 20px;
-}
-
-.dialogue-box {
-    margin-bottom: 15px;
+    padding: 25px;
+    border-top: 5px solid #ff9eb5;
 }
 
 .speaker-name {
-    color: var(--rose);
-    font-size: 1.3em;
+    color: #ff9eb5;
+    font-size: 1.4em;
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .dialogue-text {
-    font-size: 1.1em;
-    line-height: 1.5;
-    min-height: 60px;
+    font-size: 1.2em;
+    line-height: 1.6;
+    min-height: 80px;
+    margin-bottom: 20px;
 }
 
 .choices-container {
     display: grid;
-    gap: 10px;
+    gap: 12px;
 }
 
 .choice-btn {
-    background: rgba(255, 158, 181, 0.3);
-    border: 2px solid var(--rose);
+    background: rgba(255, 158, 181, 0.2);
+    border: 2px solid #ff9eb5;
     color: white;
-    padding: 12px 20px;
+    padding: 15px 25px;
     border-radius: 25px;
     cursor: pointer;
     transition: all 0.3s ease;
     text-align: left;
+    font-size: 1.1em;
 }
 
 .choice-btn:hover {
-    background: var(--rose);
+    background: #ff9eb5;
     transform: translateX(10px);
 }
 
-/* MENU EN JEU */
 .game-menu {
     position: absolute;
     top: 20px;
     right: 20px;
     display: flex;
     gap: 10px;
+    z-index: 100;
 }
 
 .game-menu-btn {
-    background: rgba(0,0,0,0.5);
-    border: 2px solid var(--rose);
+    background: rgba(0,0,0,0.6);
+    border: 2px solid #ff9eb5;
     color: white;
-    padding: 10px 15px;
+    padding: 12px 18px;
     border-radius: 20px;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .game-menu-btn:hover {
-    background: var(--rose);
+    background: #ff9eb5;
 }
 
-/* GARDE-ROBE */
-.wardrobe-content {
+/* === HEADER COMMUN === */
+.room-header {
+    background: linear-gradient(135deg, #ff9eb5, #c8a2c8);
     padding: 20px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.back-btn {
+    background: rgba(255,255,255,0.2);
+    border: 2px solid white;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: white;
+    color: #e75480;
+}
+
+/* === GARDE-ROBE === */
+#wardrobe {
+    background: linear-gradient(135deg, #ffe6e6, #fff5f5);
+}
+
+.wardrobe-content {
+    padding: 30px;
     display: grid;
     grid-template-columns: 1fr 2fr;
     gap: 30px;
@@ -316,51 +248,70 @@ body {
 
 .outfit-preview {
     background: white;
-    border-radius: 15px;
-    padding: 30px;
+    border-radius: 20px;
+    padding: 40px;
     text-align: center;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
 .character-display {
     font-size: 8em;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+.outfit-info {
+    background: #fff5f5;
+    padding: 15px;
+    border-radius: 15px;
+}
+
+.outfit-selection {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
 .outfit-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
 }
 
 .outfit-item {
     background: white;
     border: 3px solid #eee;
-    border-radius: 10px;
-    padding: 15px;
+    border-radius: 15px;
+    padding: 20px;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .outfit-item.active {
-    border-color: var(--rose);
-    background: var(--rose-clair);
+    border-color: #ff9eb5;
+    background: #fff5f5;
+    transform: scale(1.05);
 }
 
-.outfit-item.locked {
-    opacity: 0.5;
-    cursor: not-allowed;
+.outfit-item:hover {
+    border-color: #ff9eb5;
+    transform: translateY(-5px);
 }
 
 .outfit-icon {
-    font-size: 2em;
-    margin-bottom: 10px;
+    font-size: 3em;
+    margin-bottom: 15px;
 }
 
-/* MA CHAMBRE */
-.bedroom-content {
-    padding: 20px;
+/* === MA CHAMBRE === */
+#bedroom {
+    background: linear-gradient(135deg, #fff5e4, #fffaf0);
+}
+
+.room-content {
+    padding: 30px;
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 30px;
@@ -368,44 +319,45 @@ body {
 }
 
 .room-display {
-    background: url('fond-chambre.jpg') center/cover;
-    border-radius: 15px;
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
     position: relative;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    min-height: 500px;
 }
 
 .deco-item {
     position: absolute;
-    font-size: 2em;
-    cursor: pointer;
+    font-size: 3em;
 }
 
-.bed { top: 50%; left: 30%; }
+.bed { top: 40%; left: 30%; }
 .desk { top: 30%; left: 60%; }
 .plant { top: 20%; left: 20%; }
 
 .pet-display {
     position: absolute;
-    bottom: 20px;
-    right: 20px;
+    bottom: 30px;
+    right: 30px;
+    text-align: center;
 }
 
 .pet {
-    font-size: 3em;
+    font-size: 4em;
     animation: bounce 2s infinite;
 }
 
 @keyframes bounce {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+    50% { transform: translateY(-15px); }
 }
 
-/* BOUTIQUE DÉCORATION */
 .deco-shop {
     background: white;
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
 .deco-shop-item {
@@ -414,95 +366,133 @@ body {
     justify-content: space-between;
     padding: 15px;
     border-bottom: 1px solid #eee;
+    transition: background 0.3s ease;
+}
+
+.deco-shop-item:hover {
+    background: #fff5f5;
 }
 
 .buy-btn {
-    background: var(--rose);
+    background: #ff9eb5;
     color: white;
     border: none;
-    padding: 8px 15px;
-    border-radius: 15px;
+    padding: 10px 20px;
+    border-radius: 20px;
     cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-/* RÉSEAU SOCIAL */
+.buy-btn:hover {
+    background: #e75480;
+    transform: scale(1.05);
+}
+
+/* === RÉSEAU SOCIAL === */
+#social {
+    background: linear-gradient(135deg, #f0f8ff, #fffaf0);
+}
+
 .social-content {
-    padding: 20px;
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 30px;
+    padding: 30px;
     height: calc(100vh - 80px);
 }
 
 .social-feed {
     background: white;
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .social-post {
     display: flex;
-    gap: 15px;
-    padding: 15px;
-    border-bottom: 1px solid #eee;
+    gap: 20px;
+    padding: 20px;
+    border-bottom: 2px solid #f0f0f0;
 }
 
 .post-avatar {
-    font-size: 2em;
+    font-size: 3em;
 }
 
 .post-author {
     font-weight: bold;
-    color: var(--rose-fonce);
-    margin-bottom: 5px;
+    color: #e75480;
+    margin-bottom: 8px;
 }
 
 .post-actions {
-    margin-top: 10px;
     display: flex;
-    gap: 15px;
+    gap: 20px;
+    margin-top: 10px;
 }
 
 .like-btn, .comment-btn {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 1.1em;
+    font-size: 1.2em;
 }
 
-/* PARAMÈTRES */
-.settings-content {
+/* === BOUTIQUE === */
+#shop {
+    background: linear-gradient(135deg, #fff0f5, #fffaf0);
+}
+
+.shop-content {
     padding: 30px;
+    height: calc(100vh - 80px);
+}
+
+.shop-items {
     background: white;
-    margin: 20px;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.setting-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 0;
-    border-bottom: 1px solid #eee;
-}
-
-.save-code-btn {
-    background: var(--rose);
-    color: white;
-    border: none;
-    padding: 10px 20px;
     border-radius: 20px;
-    cursor: pointer;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    max-width: 800px;
+    margin: 0 auto;
 }
 
-/* RESPONSIVE */
-@media (max-width: 768px) {
-    .game-title { font-size: 2em; }
-    .menu-btn { width: 200px; }
-    .wardrobe-content, .bedroom-content, .social-content {
-        grid-template-columns: 1fr;
-    }
-    .character { width: 200px; height: 300px; }
+.shop-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.shop-item-icon {
+    font-size: 3em;
+}
+
+.shop-item-info {
+    flex: 1;
+}
+
+.shop-item-price {
+    color: #e75480;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+/* === ANIMATIONS === */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
 }
