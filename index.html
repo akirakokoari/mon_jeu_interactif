@@ -3,607 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌸 Romance Academy - Comme Amour Sucré</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #ff9eb5, #c8a2c8);
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: none;
-        }
-
-        .active {
-            display: block;
-        }
-
-        /* === MENU PRINCIPAL === */
-        #mainMenu {
-            background: url('https://via.placeholder.com/1920x1080/ffd1dc/ffffff?text=Menu+Principal') center/cover;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .game-title {
-            font-size: 4em;
-            color: white;
-            text-shadow: 3px 3px 0 #e75480;
-            margin-bottom: 50px;
-            text-align: center;
-        }
-
-        .main-menu-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .menu-btn {
-            background: linear-gradient(135deg, #ff9eb5, #e75480);
-            color: white;
-            border: none;
-            padding: 20px 40px;
-            border-radius: 30px;
-            font-size: 1.3em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 250px;
-            text-align: center;
-        }
-
-        .menu-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-        }
-
-        /* === ÉCRAN DE JEU === */
-        #gameScreen {
-            background: #000;
-        }
-
-        .game-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .character-container {
-            position: absolute;
-            bottom: 200px;
-            width: 100%;
-            display: flex;
-            justify-content: space-around;
-            align-items: flex-end;
-            height: 400px;
-        }
-
-        .character {
-            text-align: center;
-            transition: all 0.5s ease;
-        }
-
-        .character-avatar {
-            width: 300px;
-            height: 400px;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: bottom;
-        }
-
-        .character-name {
-            background: rgba(0,0,0,0.7);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            margin-top: 10px;
-            display: inline-block;
-        }
-
-        .dialogue-interface {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.85);
-            color: white;
-            padding: 25px;
-            border-top: 5px solid #ff9eb5;
-        }
-
-        .speaker-name {
-            color: #ff9eb5;
-            font-size: 1.4em;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .dialogue-text {
-            font-size: 1.2em;
-            line-height: 1.6;
-            min-height: 80px;
-            margin-bottom: 20px;
-        }
-
-        .choices-container {
-            display: grid;
-            gap: 12px;
-        }
-
-        .choice-btn {
-            background: rgba(255, 158, 181, 0.2);
-            border: 2px solid #ff9eb5;
-            color: white;
-            padding: 15px 25px;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: left;
-            font-size: 1.1em;
-        }
-
-        .choice-btn:hover {
-            background: #ff9eb5;
-            transform: translateX(10px);
-        }
-
-        .game-menu {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .game-menu-btn {
-            background: rgba(0,0,0,0.6);
-            border: 2px solid #ff9eb5;
-            color: white;
-            padding: 12px 18px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .game-menu-btn:hover {
-            background: #ff9eb5;
-        }
-
-        /* === MA CHAMBRE === */
-        #bedroom {
-            background: url('https://via.placeholder.com/1920x1080/fff5e4/ffffff?text=Ma+Chambre') center/cover;
-        }
-
-        .room-header {
-            background: linear-gradient(135deg, #ff9eb5, #c8a2c8);
-            padding: 20px;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .back-btn {
-            background: rgba(255,255,255,0.2);
-            border: 2px solid white;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .back-btn:hover {
-            background: white;
-            color: #e75480;
-        }
-
-        .room-content {
-            padding: 30px;
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 30px;
-            height: calc(100vh - 80px);
-        }
-
-        .room-display {
-            background: rgba(255,255,255,0.9);
-            border-radius: 20px;
-            padding: 30px;
-            position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .deco-item {
-            position: absolute;
-            font-size: 3em;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .deco-item:hover {
-            transform: scale(1.1);
-        }
-
-        .bed { top: 40%; left: 30%; }
-        .desk { top: 30%; left: 60%; }
-        .plant { top: 20%; left: 20%; }
-        .wardrobe { top: 50%; left: 70%; }
-
-        .pet-display {
-            position: absolute;
-            bottom: 30px;
-            right: 30px;
-        }
-
-        .pet {
-            font-size: 4em;
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-
-        .deco-shop {
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .deco-shop h3 {
-            color: #e75480;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .deco-shop-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            transition: background 0.3s ease;
-        }
-
-        .deco-shop-item:hover {
-            background: #fff5f5;
-        }
-
-        .buy-btn {
-            background: #ff9eb5;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .buy-btn:hover {
-            background: #e75480;
-            transform: scale(1.05);
-        }
-
-        /* === GARDE-ROBE === */
-        #wardrobe {
-            background: url('https://via.placeholder.com/1920x1080/ffe6e6/ffffff?text=Garde+Robe') center/cover;
-        }
-
-        .wardrobe-content {
-            padding: 30px;
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 30px;
-            height: calc(100vh - 80px);
-        }
-
-        .outfit-preview {
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .character-display {
-            font-size: 8em;
-            margin-bottom: 30px;
-        }
-
-        .outfit-info {
-            background: #fff5f5;
-            padding: 15px;
-            border-radius: 15px;
-        }
-
-        .outfit-selection {
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .outfit-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .outfit-item {
-            background: white;
-            border: 3px solid #eee;
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .outfit-item.active {
-            border-color: #ff9eb5;
-            background: #fff5f5;
-            transform: scale(1.05);
-        }
-
-        .outfit-item:hover:not(.locked) {
-            border-color: #ff9eb5;
-            transform: translateY(-5px);
-        }
-
-        .outfit-item.locked {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .outfit-icon {
-            font-size: 3em;
-            margin-bottom: 15px;
-        }
-
-        /* === RÉSEAU SOCIAL === */
-        #social {
-            background: url('https://via.placeholder.com/1920x1080/f0f8ff/ffffff?text=Réseau+Social') center/cover;
-        }
-
-        .social-content {
-            padding: 30px;
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 30px;
-            height: calc(100vh - 80px);
-        }
-
-        .social-feed {
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            overflow-y: auto;
-        }
-
-        .social-post {
-            display: flex;
-            gap: 20px;
-            padding: 20px;
-            border-bottom: 2px solid #f0f0f0;
-            transition: background 0.3s ease;
-        }
-
-        .social-post:hover {
-            background: #fffaf0;
-        }
-
-        .post-avatar {
-            font-size: 3em;
-            flex-shrink: 0;
-        }
-
-        .post-content {
-            flex: 1;
-        }
-
-        .post-author {
-            font-weight: bold;
-            color: #e75480;
-            margin-bottom: 8px;
-            font-size: 1.1em;
-        }
-
-        .post-text {
-            line-height: 1.5;
-            margin-bottom: 12px;
-        }
-
-        .post-actions {
-            display: flex;
-            gap: 20px;
-        }
-
-        .like-btn, .comment-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.2em;
-            transition: transform 0.3s ease;
-        }
-
-        .like-btn:hover, .comment-btn:hover {
-            transform: scale(1.2);
-        }
-
-        .social-sidebar {
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .friend-list {
-            margin-top: 20px;
-        }
-
-        .friend-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px;
-            border-radius: 10px;
-            transition: background 0.3s ease;
-            cursor: pointer;
-        }
-
-        .friend-item:hover {
-            background: #fff5f5;
-        }
-
-        .friend-avatar {
-            font-size: 2em;
-        }
-
-        /* === BOUTIQUES === */
-        #shop {
-            background: url('https://via.placeholder.com/1920x1080/fff0f5/ffffff?text=Boutique') center/cover;
-        }
-
-        .shop-content {
-            padding: 30px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            height: calc(100vh - 80px);
-        }
-
-        .shop-categories {
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .shop-category {
-            padding: 15px;
-            margin: 10px 0;
-            background: #fff5f5;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .shop-category:hover {
-            background: #ff9eb5;
-            color: white;
-            transform: translateX(10px);
-        }
-
-        .shop-items {
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            overflow-y: auto;
-        }
-
-        .shop-item {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            padding: 20px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-
-        .shop-item-icon {
-            font-size: 3em;
-        }
-
-        .shop-item-info {
-            flex: 1;
-        }
-
-        .shop-item-price {
-            color: #e75480;
-            font-weight: bold;
-            font-size: 1.2em;
-        }
-
-        /* === ANIMATIONS === */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease;
-        }
-
-        /* === STATS JOUEUR === */
-        .player-stats {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 20px;
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .stat {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-    </style>
+    <title>🌸 Romance Academy - Jeu de Romance Premium</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- === MENU PRINCIPAL === -->
+    <!-- MENU PRINCIPAL -->
     <div id="mainMenu" class="screen active">
-        <h1 class="game-title">🌸 ROMANCE ACADEMY 🌸</h1>
-        <div class="main-menu-buttons">
-            <button class="menu-btn" onclick="showScreen('gameScreen')">📖 HISTOIRE PRINCIPALE</button>
-            <button class="menu-btn" onclick="showScreen('bedroom')">🏠 MA CHAMBRE</button>
-            <button class="menu-btn" onclick="showScreen('wardrobe')">👗 GARDE-ROBE</button>
-            <button class="menu-btn" onclick="showScreen('social')">👥 RÉSEAU SOCIAL</button>
-            <button class="menu-btn" onclick="showScreen('shop')">🛍️ BOUTIQUE</button>
-            <button class="menu-btn" onclick="showSettings()">⚙️ PARAMÈTRES</button>
+        <div class="menu-background"></div>
+        <div class="menu-content">
+            <h1 class="game-title">ROMANCE ACADEMY</h1>
+            <div class="main-menu-buttons">
+                <button class="menu-btn" onclick="startStory()">📖 HISTOIRE PRINCIPALE</button>
+                <button class="menu-btn" onclick="showScreen('wardrobe')">👗 GARDE-ROBE</button>
+                <button class="menu-btn" onclick="showScreen('bedroom')">🏠 MA CHAMBRE</button>
+                <button class="menu-btn" onclick="showScreen('social')">👥 RÉSEAU SOCIAL</button>
+                <button class="menu-btn" onclick="showScreen('shop')">🛍️ BOUTIQUE</button>
+                <button class="menu-btn" onclick="showSettings()">⚙️ PARAMÈTRES</button>
+            </div>
         </div>
     </div>
 
-    <!-- === ÉCRAN DE JEU PRINCIPAL === -->
+    <!-- ÉCRAN DE JEU -->
     <div id="gameScreen" class="screen">
-        <!-- Stats joueur -->
         <div class="player-stats">
             <div class="stat">💖 <span id="lovePoints">50</span></div>
             <div class="stat">💎 <span id="diamonds">150</span></div>
             <div class="stat">⭐ <span id="level">1</span></div>
         </div>
 
-        <!-- Fond et personnages -->
         <div class="game-background" id="gameBackground"></div>
+        
         <div class="character-container">
             <div class="character" id="characterLeft">
                 <div class="character-avatar"></div>
@@ -615,79 +44,27 @@
             </div>
         </div>
 
-        <!-- Interface dialogue -->
         <div class="dialogue-interface">
             <div class="speaker-name" id="speakerName">Narrateur</div>
             <div class="dialogue-text" id="dialogueText">
-                Bienvenue à l'Académie Romance ! Prépare-toi à vivre une aventure inoubliable...
+                Bienvenue à l'Académie Romance ! Une aventure extraordinaire t'attende...
             </div>
             <div class="choices-container" id="choicesContainer">
                 <button class="choice-btn" onclick="startStory()">Commencer l'aventure</button>
             </div>
         </div>
 
-        <!-- Menu jeu -->
         <div class="game-menu">
             <button class="game-menu-btn" onclick="showScreen('mainMenu')">≡ MENU</button>
             <button class="game-menu-btn" onclick="saveGame()">💾 SAUV.</button>
-            <button class="game-menu-btn" onclick="quickSave()">⚡ SAUV. RAPIDE</button>
+            <button class="game-menu-btn" onclick="showScreen('shop')">🛍️ BOUTIQUE</button>
         </div>
     </div>
 
-    <!-- === MA CHAMBRE === -->
-    <div id="bedroom" class="screen">
-        <div class="room-header">
-            <button class="back-btn" onclick="showScreen('mainMenu')">← RETOUR AU MENU</button>
-            <h2>🏠 MA CHAMBRE PERSONNELLE</h2>
-            <div class="player-stats">
-                <div class="stat">💎 <span>150</span></div>
-            </div>
-        </div>
-        <div class="room-content">
-            <div class="room-display">
-                <div class="deco-item bed">🛏️</div>
-                <div class="deco-item desk">🪑</div>
-                <div class="deco-item plant">🌿</div>
-                <div class="deco-item wardrobe">👗</div>
-                <div class="pet-display">
-                    <div class="pet">🐱</div>
-                    <div class="character-name">Mimi</div>
-                </div>
-            </div>
-            <div class="deco-shop">
-                <h3>🎨 BOUTIQUE DE DÉCORATION</h3>
-                <div class="deco-shop-item">
-                    <div class="deco-icon">🖼️</div>
-                    <div class="deco-info">
-                        <div class="deco-name">Tableau Artistique</div>
-                        <div class="deco-desc">Une œuvre unique pour ta chambre</div>
-                    </div>
-                    <button class="buy-btn">75 💎</button>
-                </div>
-                <div class="deco-shop-item">
-                    <div class="deco-icon">💡</div>
-                    <div class="deco-info">
-                        <div class="deco-name">Lumière LED</div>
-                        <div class="deco-desc">Ambiance chaleureuse garantie</div>
-                    </div>
-                    <button class="buy-btn">45 💎</button>
-                </div>
-                <div class="deco-shop-item">
-                    <div class="deco-icon">🧸</div>
-                    <div class="deco-info">
-                        <div class="deco-name">Peluche Géante</div>
-                        <div class="deco-desc">Parfaite pour les câlins</div>
-                    </div>
-                    <button class="buy-btn">120 💎</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- === GARDE-ROBE === -->
+    <!-- GARDE-ROBE -->
     <div id="wardrobe" class="screen">
         <div class="room-header">
-            <button class="back-btn" onclick="showScreen('mainMenu')">← RETOUR AU MENU</button>
+            <button class="back-btn" onclick="showScreen('mainMenu')">← RETOUR</button>
             <h2>👗 MA GARDE-ROBE</h2>
         </div>
         <div class="wardrobe-content">
@@ -713,28 +90,54 @@
                         <div class="outfit-icon">🥻</div>
                         <div class="outfit-name">Style Bohème</div>
                     </div>
-                    <div class="outfit-item locked">
-                        <div class="outfit-icon">🔒</div>
-                        <div class="outfit-name">Tenue Spéciale</div>
-                    </div>
-                    <div class="outfit-item locked">
-                        <div class="outfit-icon">🔒</div>
-                        <div class="outfit-name">Uniforme</div>
-                    </div>
-                    <div class="outfit-item locked">
-                        <div class="outfit-icon">🔒</div>
-                        <div class="outfit-name">Tenue de Fête</div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- === RÉSEAU SOCIAL === -->
+    <!-- MA CHAMBRE -->
+    <div id="bedroom" class="screen">
+        <div class="room-header">
+            <button class="back-btn" onclick="showScreen('mainMenu')">← RETOUR</button>
+            <h2>🏠 MA CHAMBRE</h2>
+        </div>
+        <div class="room-content">
+            <div class="room-display">
+                <div class="deco-item bed">🛏️</div>
+                <div class="deco-item desk">🪑</div>
+                <div class="deco-item plant">🌿</div>
+                <div class="pet-display">
+                    <div class="pet">🐱</div>
+                    <div class="character-name">Mimi</div>
+                </div>
+            </div>
+            <div class="deco-shop">
+                <h3>🎨 BOUTIQUE DÉCORATION</h3>
+                <div class="deco-shop-item">
+                    <div class="deco-icon">🖼️</div>
+                    <div class="deco-info">
+                        <div class="deco-name">Tableau Artistique</div>
+                        <div class="deco-desc">Une œuvre unique</div>
+                    </div>
+                    <button class="buy-btn" onclick="buyItem('tableau', 75)">75 💎</button>
+                </div>
+                <div class="deco-shop-item">
+                    <div class="deco-icon">💡</div>
+                    <div class="deco-info">
+                        <div class="deco-name">Lumière LED</div>
+                        <div class="deco-desc">Ambiance chaleureuse</div>
+                    </div>
+                    <button class="buy-btn" onclick="buyItem('led', 45)">45 💎</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RÉSEAU SOCIAL -->
     <div id="social" class="screen">
         <div class="room-header">
-            <button class="back-btn" onclick="showScreen('mainMenu')">← RETOUR AU MENU</button>
-            <h2>👥 RÉSEAU SOCIAL - ROMANCE ACADEMY</h2>
+            <button class="back-btn" onclick="showScreen('mainMenu')">← RETOUR</button>
+            <h2>👥 RÉSEAU SOCIAL</h2>
         </div>
         <div class="social-content">
             <div class="social-feed">
@@ -742,11 +145,10 @@
                     <div class="post-avatar">👩‍🎓</div>
                     <div class="post-content">
                         <div class="post-author">Sophia • Il y a 2h</div>
-                        <div class="post-text">Quelqu'un veut rejoindre notre groupe d'étude en arts ce soir ? 📚 J'ai réservé la salle B12 ! #Étude #Art</div>
+                        <div class="post-text">Quelqu'un veut rejoindre notre groupe d'étude en arts ce soir ? 📚</div>
                         <div class="post-actions">
                             <button class="like-btn">❤️ 24</button>
                             <button class="comment-btn">💬 8</button>
-                            <button class="share-btn">🔄 3</button>
                         </div>
                     </div>
                 </div>
@@ -754,49 +156,10 @@
                     <div class="post-avatar">👨‍🎨</div>
                     <div class="post-content">
                         <div class="post-author">Alex • Il y a 5h</div>
-                        <div class="post-text">Nouvelle peinture presque terminée ! J'ai hâte de vous la montrer 🎨 Qui vient à l'exposition demain ? #Art #Peinture</div>
+                        <div class="post-text">Nouvelle peinture presque terminée ! J'ai hâte de vous la montrer 🎨</div>
                         <div class="post-actions">
                             <button class="like-btn">❤️ 56</button>
                             <button class="comment-btn">💬 12</button>
-                            <button class="share-btn">🔄 7</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="social-post">
-                    <div class="post-avatar">🏫</div>
-                    <div class="post-content">
-                        <div class="post-author">Académie Romance • Aujourd'hui</div>
-                        <div class="post-text">📢 ANNONCE : Le grand bal de printemps aura lieu le 15 juin ! Inscriptions ouvertes. Costumes de soirée requis. ✨ #Bal #Événement</div>
-                        <div class="post-actions">
-                            <button class="like-btn">❤️ 89</button>
-                            <button class="comment-btn">💬 23</button>
-                            <button class="share-btn">🔄 15</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="social-sidebar">
-                <h3>👥 MES AMIS</h3>
-                <div class="friend-list">
-                    <div class="friend-item">
-                        <div class="friend-avatar">👩‍🎓</div>
-                        <div class="friend-info">
-                            <div class="friend-name">Sophia</div>
-                            <div class="friend-status">En ligne • Artiste</div>
-                        </div>
-                    </div>
-                    <div class="friend-item">
-                        <div class="friend-avatar">👨‍🎨</div>
-                        <div class="friend-info">
-                            <div class="friend-name">Alex</div>
-                            <div class="friend-status">En ligne • Peintre</div>
-                        </div>
-                    </div>
-                    <div class="friend-item">
-                        <div class="friend-avatar">👨‍💼</div>
-                        <div class="friend-info">
-                            <div class="friend-name">Lucas</div>
-                            <div class="friend-status">Hors ligne • Musicien</div>
                         </div>
                     </div>
                 </div>
@@ -804,41 +167,22 @@
         </div>
     </div>
 
-    <!-- === BOUTIQUE === -->
+    <!-- BOUTIQUE -->
     <div id="shop" class="screen">
         <div class="room-header">
-            <button class="back-btn" onclick="showScreen('mainMenu')">← RETOUR AU MENU</button>
-            <h2>🛍️ BOUTIQUE DE L'ACADÉMIE</h2>
-            <div class="player-stats">
-                <div class="stat">💎 <span>150</span></div>
-            </div>
+            <button class="back-btn" onclick="showScreen('mainMenu')">← RETOUR</button>
+            <h2>🛍️ BOUTIQUE</h2>
         </div>
         <div class="shop-content">
-            <div class="shop-categories">
-                <h3>📦 CATÉGORIES</h3>
-                <div class="shop-category" onclick="showCategory('vetements')">👗 Vêtements</div>
-                <div class="shop-category" onclick="showCategory('accessoires')">💍 Accessoires</div>
-                <div class="shop-category" onclick="showCategory('deco')">🎨 Décoration</div>
-                <div class="shop-category" onclick="showCategory('special')">⭐ Articles Spéciaux</div>
-            </div>
             <div class="shop-items">
                 <div class="shop-item">
                     <div class="shop-item-icon">👗</div>
                     <div class="shop-item-info">
-                        <div class="shop-item-name">Robe de Soirée Élégante</div>
+                        <div class="shop-item-name">Robe de Soirée</div>
                         <div class="shop-item-desc">Parfaite pour les occasions spéciales</div>
                     </div>
                     <div class="shop-item-price">200 💎</div>
-                    <button class="buy-btn">Acheter</button>
-                </div>
-                <div class="shop-item">
-                    <div class="shop-item-icon">👒</div>
-                    <div class="shop-item-info">
-                        <div class="shop-item-name">Chapeau Vintage</div>
-                        <div class="shop-item-desc">Style rétro charmant</div>
-                    </div>
-                    <div class="shop-item-price">80 💎</div>
-                    <button class="buy-btn">Acheter</button>
+                    <button class="buy-btn" onclick="buyItem('robe_soiree', 200)">Acheter</button>
                 </div>
                 <div class="shop-item">
                     <div class="shop-item-icon">💎</div>
@@ -847,102 +191,12 @@
                         <div class="shop-item-desc">Brille de mille feux</div>
                     </div>
                     <div class="shop-item-price">150 💎</div>
-                    <button class="buy-btn">Acheter</button>
+                    <button class="buy-btn" onclick="buyItem('collier', 150)">Acheter</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        // === SYSTÈME DE JEU COMPLET ===
-        let gameData = {
-            scene: 0,
-            alex: 0,
-            sophia: 0,
-            lucas: 0,
-            diamonds: 150,
-            lovePoints: 50,
-            level: 1,
-            currentOutfit: 0,
-            outfits: [0, 1, 2],
-            inventory: []
-        };
-
-        const story = [
-            // SAISON 1 - CHAPITRE 1
-            {
-                background: 'https://via.placeholder.com/1920x1080/87ceeb/ffffff?text=Académie+Extérieur',
-                characters: {
-                    left: null,
-                    right: null
-                },
-                speaker: "Narrateur",
-                text: "Tu te tiens devant les imposantes portes de l'Académie Romance. Le bâtiment est magnifique, avec ses vitraux colorés et ses jardins impeccables. Tu sens ton cœur battre la chamade... C'est ton premier jour.",
-                choices: [
-                    { text: "Prendre une profonde inspiration et pousser les portes", next: 1 },
-                    { text: "Observer les autres étudiants qui entrent et sortent", next: 2 },
-                    { text: "Vérifier son apparence une dernière fois", next: 3 }
-                ]
-            },
-            {
-                background: 'https://via.placeholder.com/1920x1080/ddc0b4/ffffff?text=Grand+Hall',
-                characters: {
-                    left: { name: "Alex", avatar: "👨‍🎨" },
-                    right: null
-                },
-                speaker: "Alex",
-                text: "Oh, bonjour ! Je ne t'ai jamais vu ici. Tu dois être le nouveau dont tout le monde parle. Je m'appelle Alex, je suis en section peinture. Ton style est... plutôt unique !",
-                choices: [
-                    { text: \"Merci ! Je m'appelle... Enchanté de te rencontrer !\", next: 4, effects: { alex: 15 } },
-                    { text: \"Oui, je viens d'arriver. C'est immense ici !\", next: 5, effects: { alex: 10 } },
-                    { text: \"Tout le monde parle de moi ? Dans quel sens ?\", next: 6, effects: { alex: 8 } }
-                ]
-            },
-            {
-                background: 'https://via.placeholder.com/1920x1080/ddc0b4/ffffff?text=Grand+Hall',
-                characters: {
-                    left: { name: "Alex", avatar: "👨‍🎨" },
-                    right: null
-                },
-                speaker: "Alex",
-                text: \"Ravi de te rencontrer aussi ! Désolé si j'ai été un peu direct. C'est juste que... eh bien, on n'a pas souvent de nouveaux étudiants en milieu d'année. Tu viens d'où ?\",
-                choices: [
-                    { text: \"D'une petite ville à la campagne\", next: 7, effects: { alex: 12 } },
-                    { text: \"Je préfère ne pas en parler pour l'instant\", next: 8, effects: { alex: 5 } },
-                    { text: \"De la ville, mais c'est une longue histoire\", next: 9, effects: { alex: 10 } }
-                ]
-            },
-            {
-                background: 'https://via.placeholder.com/1920x1080/ddc0b4/ffffff?text=Grand+Hall',
-                characters: {
-                    left: { name: "Alex", avatar: "👨‍🎨" },
-                    right: { name: "Sophia", avatar: "👩‍🎓" }
-                },
-                speaker: "Sophia",
-                text: "Alex ! En train d'embêter les nouveaux déjà ? Laisse-le respirer un peu ! Désolée, Alex peut être un peu... enthousiaste. Moi c'est Sophia, je suis la préfète de l'académie.",
-                choices: [
-                    { text: \"Pas de problème, Alex est très sympathique !\", next: 10, effects: { alex: 10, sophia: 15 } },
-                    { text: \"Merci de venir à mon secours !\", next: 11, effects: { sophia: 20, alex: -5 } },
-                    { text: \"Je me débrouillais très bien, mais merci\", next: 12, effects: { sophia: 10, alex: 5 } }
-                ]
-            },
-            {
-                background: 'https://via.placeholder.com/1920x1080/ddc0b4/ffffff?text=Grand+Hall',
-                characters: {
-                    left: { name: "Alex", avatar: "👨‍🎨" },
-                    right: { name: "Sophia", avatar: "👩‍🎓" }
-                },
-                speaker: "Sophia",
-                text: "Dans tous les cas, bienvenue à l'Académie Romance ! Je peux te faire visiter si tu veux. Les couloirs peuvent être un vrai labyrinthe pour les nouveaux.",
-                choices: [
-                    { text: \"Avec plaisir ! Une visite guidée serait géniale\", next: 13, effects: { sophia: 15 } },
-                    { text: \"Je devrais peut-être d'abord trouver ma chambre...\", next: 14, effects: { sophia: 8 } },
-                    { text: \"Alex, tu veux bien nous accompagner ?\", next: 15, effects: { alex: 12, sophia: 10 } }
-                ]
-            }
-        ];
-
-        // === FONCTIONS PRINCIPALES ===
-        function showScreen(screenName) {
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.classList.remove('active
+    <script src="game.js"></script>
+</body>
+</html>
